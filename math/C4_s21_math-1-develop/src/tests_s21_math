@@ -1,0 +1,596 @@
+#include "s21_math.h"
+#include <math.h>
+
+// checkmk tests_s21_math > tests_s21_math.c
+// gcc -Wall -Werror -Wextra -pedantic -std=c11 s21_*.c tests_*.c -lcheck
+
+// #suit s21_
+// #tcase s21_
+// #test test_s21_
+
+#tcase s21_math_exp
+#test test_01_s21_exp_s21_NAN
+long double orig = exp(s21_NAN), our = s21_exp(s21_NAN);
+int res = 0;
+if (isnan(orig) && isnan(our)) {
+    res = 1;
+}
+ck_assert_int_eq(1, res);
+#test test_02_s21_exp_s21_INF
+long double orig = exp(s21_INF), our = s21_exp(s21_INF);
+int res = 0;
+if (isinf(orig) && isinf(our)) {
+    res = 1;
+}
+ck_assert_int_eq(1, res);
+#test test_03_s21_exp_NEG_s21_INF
+long double orig = exp(-s21_INF), our = s21_exp(-s21_INF);
+int res = 0;
+if (fabsl(orig - our) <= 1e-6) {
+    res = 1;
+}
+ck_assert_int_eq(1, res);
+#test test_04_s21_exp_ZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", exp(0));
+sprintf(our, "%.6Lf", s21_exp(0));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_exp_ONE
+char orig[10], our[10];
+sprintf(orig, "%.6f", exp(1));
+sprintf(our, "%.6Lf", s21_exp(1));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_exp_TWO
+char orig[10], our[10];
+sprintf(orig, "%.6f", exp(2));
+sprintf(our, "%.6Lf", s21_exp(2));
+ck_assert_str_eq(orig, our);
+#test test_07_s21_exp_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", exp(1.5));
+sprintf(our, "%.6Lf", s21_exp(1.5));
+ck_assert_str_eq(orig, our);
+#test test_08_s21_exp_NEG_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", exp(-1.5));
+sprintf(our, "%.6Lf", s21_exp(-1.5));
+ck_assert_str_eq(orig, our);
+#test test_09_s21_exp_MILLION
+char orig[512], our[512];
+sprintf(orig, "%.6f", exp(1000000));
+sprintf(our, "%.6Lf", s21_exp(1000000));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_exp_MAIN_TIMEOUT
+char orig[20], our[20];
+sprintf(orig, "%.6f", exp(0.000000000001));
+sprintf(our, "%.6Lf", s21_exp(0.000000000001));
+ck_assert_str_eq(orig, our);
+#test test_11_s21_exp
+char orig[512], our[512];
+sprintf(orig, "%.6f", exp(1004.0000001));
+sprintf(our, "%.6Lf", s21_exp(1004.0000001));
+ck_assert_str_eq(orig, our);
+#test test_12_s21_exp
+char orig[512], our[512];
+sprintf(orig, "%.6f", exp(-1004.0000001));
+sprintf(our, "%.6Lf", s21_exp(-1004.0000001));
+ck_assert_str_eq(orig, our);
+
+
+#tcase s21_math_fabs
+#test test_01_s21_fabs_s21_NAN
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(s21_NAN));
+sprintf(our, "%.6Lf", s21_fabs(s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_fabs_s21_NEGZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(s21_NEGZERO));
+sprintf(our, "%.6Lf", s21_fabs(s21_NEGZERO));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_fabs_s21_INF
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(s21_INF));
+sprintf(our, "%.6Lf", s21_fabs(s21_INF));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_fabs_ZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(0.0));
+sprintf(our, "%.6Lf", s21_fabs(0.0));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_fabs_ONE
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(1.0));
+sprintf(our, "%.6Lf", s21_fabs(1.0));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_fabs_TWO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(2.0));
+sprintf(our, "%.6Lf", s21_fabs(2.0));
+ck_assert_str_eq(orig, our);
+#test test_07_s21_fabs_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(1.5));
+sprintf(our, "%.6Lf", s21_fabs(1.5));
+ck_assert_str_eq(orig, our);
+#test test_08_s21_fabs_NEG_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", fabs(-1.5));
+sprintf(our, "%.6Lf", s21_fabs(-1.5));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_fmod
+#test test_01_s21_fmod_s21_NAN_x
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(s21_NAN, 0.5));
+sprintf(our, "%.6Lf", s21_fmod(s21_NAN, 0.5));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_fmod_s21_NAN_y
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(0.5, s21_NAN));
+sprintf(our, "%.6Lf", s21_fmod(0.5, s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_fmod_s21_NEGZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(s21_NEGZERO, 1.5));
+sprintf(our, "%.6Lf", s21_fmod(s21_NEGZERO, 1.5));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_fmod_s21_INF
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(s21_INF, -1.5));
+sprintf(our, "%.6Lf", s21_fmod(s21_INF, -1.5));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_fmod_ZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(0.0, 2.0));
+sprintf(our, "%.6Lf", s21_fmod(0.0, 2.0));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_fmod_ONE
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(1.0, 0.5));
+sprintf(our, "%.6Lf", s21_fmod(1.0, 0.5));
+ck_assert_str_eq(orig, our);
+#test test_07_s21_fmod_TWO
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(2.0, 1.5));
+sprintf(our, "%.6Lf", s21_fmod(2.0, 1.5));
+ck_assert_str_eq(orig, our);
+#test test_08_s21_fmod_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(1.5, 3.5));
+sprintf(our, "%.6Lf", s21_fmod(1.5, 3.5));
+ck_assert_str_eq(orig, our);
+#test test_09_s21_fmod_NEG_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", fmod(-1.5, 1.5));
+sprintf(our, "%.6Lf", s21_fmod(-1.5, 1.5));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_log
+#test test_01_s21_log_s21_NAN
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(s21_NAN));
+sprintf(our, "%.6Lf", s21_log(s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_log_s21_NEGZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(s21_NEGZERO));
+sprintf(our, "%.6Lf", s21_log(s21_NEGZERO));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_log_s21_INF
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(s21_INF));
+sprintf(our, "%.6Lf", s21_log(s21_INF));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_log_ZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(0.0));
+sprintf(our, "%.6Lf", s21_log(0.0));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_log_ONE
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(1.0));
+sprintf(our, "%.6Lf", s21_log(1.0));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_log_TWO
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(2.0));
+sprintf(our, "%.6Lf", s21_log(2.0));
+ck_assert_str_eq(orig, our);
+#test test_07_s21_log_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(1.5));
+sprintf(our, "%.6Lf", s21_log(1.5));
+ck_assert_str_eq(orig, our);
+#test test_08_s21_log_NEG_FRACTION
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(-1.5));
+sprintf(our, "%.6Lf", s21_log(-1.5));
+ck_assert_str_eq(orig, our);
+#test test_09_s21_log_s21_e
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(s21_e + 1));
+sprintf(our, "%.6Lf", s21_log(s21_e + 1));
+ck_assert_str_eq(orig, our);
+#test test_09_s21_log_s21_e_TIMEOUT
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(9102475.801065));
+sprintf(our, "%.6Lf", s21_log(9102475.801065));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_log_s21_e_TIMEOUT
+char orig[10], our[10];
+sprintf(orig, "%.6f", log(-892796.577370));
+sprintf(our, "%.6Lf", s21_log(-892796.577370));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_pow
+#test test_01_s21_pow_BASE_ONE
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(1, 5));
+sprintf(our, "%.6Lf", s21_pow(1, 5));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_pow_s21_INF
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(s21_INF, 5));
+sprintf(our, "%.6Lf", s21_pow(s21_INF, 5));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_pow_NEG_BASE_FRACTIONED_EXP
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(-3, 5.5));
+sprintf(our, "%.6Lf", s21_pow(-3, 5.5));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_pow_s21_NAN
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(s21_NAN, 5));
+sprintf(our, "%.6Lf", s21_pow(s21_NAN, 5));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_pow_BASE_ZERO
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(0, 5));
+sprintf(our, "%.6Lf", s21_pow(0, 5));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_pow_BASE_NEGZERO_EXP_ODD
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(s21_NEGZERO, 3));
+sprintf(our, "%.6Lf", s21_pow(s21_NEGZERO, 3));
+ck_assert_str_eq(orig, our);
+#test test_07_s21_pow_BASE_NEGINF_EXP_POZ_ODD
+char orig[10], our[10];
+sprintf(orig, "%.6f", pow(-s21_INF, 3));
+sprintf(our, "%.6Lf", s21_pow(-s21_INF, 3));
+ck_assert_str_eq(orig, our);
+#test test_08_s21_pow_MAIN_01
+char orig[20], our[20];
+sprintf(orig, "%.6f", pow(5, 3));
+sprintf(our, "%.6Lf", s21_pow(5, 3));
+ck_assert_str_eq(orig, our);
+#test test_09_s21_pow_MAIN_02
+char orig[20], our[20];
+sprintf(orig, "%.6f", pow(-3, 5));
+sprintf(our, "%.6Lf", s21_pow(-3, 5));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_pow_MAIN_TIMEOUT
+char orig[20], our[20];
+sprintf(orig, "%.6f", pow(0.000000000001, 0.000000000001));
+sprintf(our, "%.6Lf", s21_pow(0.000000000001, 0.000000000001));
+ck_assert_str_eq(orig, our);
+#test test_11_s21_pow_MAIN_TIMEOUT
+char orig[20], our[20];
+sprintf(orig, "%.6f", pow(-132549216.566863, -132549216.566863));
+sprintf(our, "%.6Lf", s21_pow(-132549216.566863, -132549216.566863));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_abs
+#test test_01_s21_abs
+char orig[20], our[20];
+int x = -156746274;
+sprintf(orig, "%d", abs(x));
+sprintf(our, "%d", s21_abs(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_abs
+char orig[20], our[20];
+int x = 156746274;
+sprintf(orig, "%d", abs(x));
+sprintf(our, "%d", s21_abs(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_abs
+char orig[20], our[20];
+int x = -2147483647;
+sprintf(orig, "%d", abs(x));
+sprintf(our, "%d", s21_abs(x));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_ceil
+#test test_01_s21_ceil
+char orig[30], our[30];
+double x = 142.315;
+sprintf(orig, "%.15f", ceil(x));
+sprintf(our, "%.15Lf", s21_ceil(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_ceil
+char orig[30], our[30];
+double x = 32243;
+sprintf(orig, "%.15f", ceil(x));
+sprintf(our, "%.15Lf", s21_ceil(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_ceil
+char orig[30], our[30];
+double x = -21474.24356;
+sprintf(orig, "%.15f", ceil(x));
+sprintf(our, "%.15Lf", s21_ceil(x));
+ck_assert_str_eq(orig, our);
+
+
+#tcase s21_math_sqrt
+#test test_01_s21_sqrt
+char orig[100], our[100];
+double x = 144.0;
+sprintf(orig, "%.6f", sqrt(x));
+sprintf(our, "%.6Lf", s21_sqrt(x));
+ck_assert_str_eq(orig, our);
+ck_assert_double_eq_tol(sqrt(144.0), s21_sqrt(144.0), 0.0000001);
+#test test_02_s21_sqrt
+char orig[1000], our[1000];
+double x = 3243;
+sprintf(orig, "%.6f", sqrt(x));
+sprintf(our, "%.6Lf", s21_sqrt(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_sqrt
+char orig[100], our[100];
+double x = -21474.24356;
+sprintf(orig, "%.6f", sqrt(x));
+sprintf(our, "%.6Lf", s21_sqrt(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_sqrt_s21_NAN
+char orig[100], our[100];
+sprintf(orig, "%.6f", sqrt(s21_NAN));
+sprintf(our, "%.6Lf", s21_sqrt(s21_NAN));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_floor
+#test test_01_s21_floor
+char orig[30], our[30];
+double x = 142.315;
+sprintf(orig, "%.6f", floor(x));
+sprintf(our, "%.6Lf", s21_floor(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_floor
+char orig[30], our[30];
+double x = 32243;
+sprintf(orig, "%.6f", floor(x));
+sprintf(our, "%.6Lf", s21_floor(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_floor
+char orig[30], our[30];
+double x = -21474.24356;
+sprintf(orig, "%.6f", floor(x));
+sprintf(our, "%.6Lf", s21_floor(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_floor_s21_NAN
+char orig[100], our[100];
+sprintf(orig, "%.6f", floor(s21_NAN));
+sprintf(our, "%.6Lf", s21_floor(s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_floor_ZERO
+char orig[100], our[100];
+sprintf(orig, "%.6f", floor(0));
+sprintf(our, "%.6Lf", s21_floor(0));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_floor_s21_INF
+char orig[100], our[100];
+sprintf(orig, "%.6f", floor(s21_INF));
+sprintf(our, "%.6Lf", s21_floor(s21_INF));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_tan
+#test test_01_s21_tan
+char orig[100], our[100];
+double x = 142.315;
+sprintf(orig, "%.9f", tan(x));
+sprintf(our, "%.9Lf", s21_tan(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_tan
+char orig[1000], our[1000];
+double x = 3243;
+sprintf(orig, "%.9f", tan(x));
+sprintf(our, "%.9Lf", s21_tan(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_tan
+char orig[100], our[100];
+double x = -21474.24356;
+sprintf(orig, "%.6f", tan(x));
+sprintf(our, "%.6Lf", s21_tan(x));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_tan_TIMEOUT
+char orig[100], our[100];
+double x = 0.0000000001;
+sprintf(orig, "%.6f", tan(x));
+sprintf(our, "%.6Lf", s21_tan(x));
+ck_assert_str_eq(orig, our);
+#test test_11_s21_tan_TIMEOUT
+char orig[100], our[100];
+double x = 430824.234405370;
+sprintf(orig, "%.7f", tan(x));
+sprintf(our, "%.7Lf", s21_tan(x));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_sin
+#test test_01_s21_sin
+char orig[100], our[100];
+double x = 142.315;
+sprintf(orig, "%.9f", sin(x));
+sprintf(our, "%.9Lf", s21_sin(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_sin
+char orig[1000], our[1000];
+double x = 3243;
+sprintf(orig, "%.9f", sin(x));
+sprintf(our, "%.9Lf", s21_sin(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_sin
+char orig[100], our[100];
+double x = -21474.24356;
+sprintf(orig, "%.9f", sin(x));
+sprintf(our, "%.9Lf", s21_sin(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_sin_s21_NAN
+char orig[100], our[100];
+sprintf(orig, "%.6f", sin(s21_NAN));
+sprintf(our, "%.6Lf", s21_sin(s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_sin_TIMEOUT
+char orig[100], our[100];
+double x = 430824.234405370;
+sprintf(orig, "%.7f", sin(x));
+sprintf(our, "%.7Lf", s21_sin(x));
+ck_assert_str_eq(orig, our);
+
+
+#tcase s21_math_cos
+#test test_01_s21_cos
+char orig[100], our[100];
+double x = 142.315;
+sprintf(orig, "%.9f", cos(x));
+sprintf(our, "%.9Lf", s21_cos(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_cos
+char orig[1000], our[1000];
+double x = 3243;
+sprintf(orig, "%.9f", cos(x));
+sprintf(our, "%.9Lf", s21_cos(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_cos
+char orig[100], our[100];
+double x = -21474.24356;
+sprintf(orig, "%.6f", cos(x));
+sprintf(our, "%.6Lf", s21_cos(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_cos_s21_NAN
+char orig[100], our[100];
+sprintf(orig, "%.6f", cos(s21_NAN));
+sprintf(our, "%.6Lf", s21_cos(s21_NAN));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_cos_ZERO
+char orig[100], our[100];
+sprintf(orig, "%.6f", cos(1));
+sprintf(our, "%.6Lf", s21_cos(1));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_cos_s21_PI
+char orig[100], our[100];
+sprintf(orig, "%.6f", cos(-s21_PI/2));
+sprintf(our, "%.6Lf", s21_cos(-s21_PI/2));
+ck_assert_str_eq(orig, our);
+#test test_10_s21_cos_TIMEOUT
+char orig[100], our[100];
+double x = 0.0000000001;
+sprintf(orig, "%.9f", cos(x));
+sprintf(our, "%.9Lf", s21_cos(x));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_atan
+#test test_01_s21_atan
+char orig[30], our[30];
+double x = 142.315;
+sprintf(orig, "%.6f", atan(x));
+sprintf(our, "%.6Lf", s21_atan(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_atan
+char orig[30], our[30];
+double x = 32243;
+sprintf(orig, "%.6f", atan(x));
+sprintf(our, "%.6Lf", s21_atan(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_atan
+char orig[30], our[30];
+double x = -21474.24356;
+sprintf(orig, "%.6f", atan(x));
+sprintf(our, "%.6Lf", s21_atan(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_atan
+char orig[30], our[30];
+double x = -1;
+sprintf(orig, "%.6f", atan(x));
+sprintf(our, "%.6Lf", s21_atan(x));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_atan
+char orig[30], our[30];
+double x = 1;
+sprintf(orig, "%.6f", atan(x));
+sprintf(our, "%.6Lf", s21_atan(x));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_asin
+#test test_01_s21_asin
+char orig[30], our[30];
+double x = 142.315;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_asin
+char orig[30], our[30];
+double x = 32243;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_asin
+char orig[30], our[30];
+double x = -21474.24356;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_asin
+char orig[30], our[30];
+double x = 0.426;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_asin
+char orig[30], our[30];
+double x = -1;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_asin
+char orig[30], our[30];
+double x = 1;
+sprintf(orig, "%.15f", asin(x));
+sprintf(our, "%.15Lf", s21_asin(x));
+ck_assert_str_eq(orig, our);
+
+#tcase s21_math_acos
+#test test_01_s21_acos
+char orig[30], our[30];
+double x = 142.315;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
+#test test_02_s21_acos
+char orig[30], our[30];
+double x = 32243;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
+#test test_03_s21_acos
+char orig[30], our[30];
+double x = -21474.24356;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
+#test test_04_s21_acos
+char orig[30], our[30];
+double x = 0.426;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
+#test test_05_s21_acos
+char orig[30], our[30];
+double x = -1;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
+#test test_06_s21_acos
+char orig[30], our[30];
+double x = 1;
+sprintf(orig, "%.9f", acos(x));
+sprintf(our, "%.9Lf", s21_acos(x));
+ck_assert_str_eq(orig, our);
